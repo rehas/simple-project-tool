@@ -12,5 +12,13 @@ Server :
   
 Client : 
   - Setup layout with grids
+    - Setup Up 7 columns
+      - Unset
+      - FlowCharts
+      - WireFrames
+      - Prototype
+      - Development
+      - Test
+      - Launch
   - Setup task component
   - Render taks on 
