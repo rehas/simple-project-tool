@@ -23,6 +23,12 @@ Client :
   + Setup task component
   + Render taks on 
   + make tasks draggable
-  - make tasks editable
-  - make tasks deletable
-  - create new tasks
+  + make tasks editable
+  + make tasks deletable
+  + create new tasks
+
+- clean code
+
+- Own input
+  - color cards when dropped to a different lane
+  - 
