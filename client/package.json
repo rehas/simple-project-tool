@@ -11,6 +11,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.x",
+    "react-trello": "^2.0.3",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "superagent": "^4.0.0-beta.5"
