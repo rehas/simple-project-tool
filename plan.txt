@@ -12,7 +12,7 @@ Server :
   
 Client : 
   - Setup layout with grids
-    - Setup Up 7 columns
+    + Setup Up 7 columns
       - Unset
       - FlowCharts
       - WireFrames
@@ -20,5 +20,9 @@ Client :
       - Development
       - Test
       - Launch
-  - Setup task component
-  - Render taks on 
+  + Setup task component
+  + Render taks on 
+  + make tasks draggable
+  - make tasks editable
+  - make tasks deletable
+  - create new tasks

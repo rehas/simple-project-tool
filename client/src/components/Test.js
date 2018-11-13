@@ -15,35 +15,66 @@ const styles = theme =>({
   }
 })
 
+const sections = [
+  {name: "unset"},
+  {name: "FlowCharts"},
+  {name: "WireFrames"},
+  {name: "Prototype"},
+  {name: "Development"},
+  {name: "Test"},
+  {name: "Launch"},
+]
 
-const data = {
-  lanes: [
-    {
-      id: 'lane1',
-      title: 'Planned Tasks',
-      label: '2/2',
-      cards: [
-        {id: 'Card1', title: 'Write Blog', description: 'Can AI make memes', label: '30 mins'},
-        {id: 'Card2', title: 'Pay Rent', description: 'Transfer via NEFT', label: '5 mins', metadata: {sha: 'be312a1'}}
-      ]
-    },
-    {
-      id: 'lane2',
-      title: 'Completed',
-      label: '0/0',
-      cards: []
-    }
-  ]
+const dataSet = (sectionsObj, tasks = []) =>{
+  return {
+    lanes: sectionsObj.map(section=>{
+      return {
+        id: section.name, 
+        title: section.name,
+        cards: tasks.filter(task=> task.section.toLowerCase() === section.name.toLowerCase()).map(task=> ({...task, id: task._id}))
+      }
+    })
+  }
 }
+
+console.log((dataSet(sections)))
+
+let data = dataSet(sections)
 
 class Test extends React.Component {
 
   componentDidMount = () => {
     this.props.getAllTasks()
   }
+  handleDragStart = (cardId, laneId) =>{
+    console.log('drag started')
+        console.log(`cardId: ${cardId}`)
+        console.log(`laneId: ${laneId}`)
+  }
+
+  handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, card) => {
+    console.log('drag ended')
+    console.log(`cardId: ${cardId}`)
+    console.log(`sourceLaneId: ${sourceLaneId}`)
+    console.log(`targetLaneId: ${targetLaneId}`)
+    console.log(card)
+  }
 
   render() {
-    return <Board draggable data={data} />
+
+    const {taskList} = this.props
+
+    if (taskList){
+      data = dataSet(sections, taskList)
+    }
+
+    
+
+    return <Board 
+      draggable data={data}
+      handleDragStart={this.handleDragStart}
+      handleDragEnd={this.handleDragEnd}
+      />
   }
 }
 

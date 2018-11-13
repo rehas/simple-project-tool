@@ -69,9 +69,17 @@ app.patch('/tasks/:taskid', async(req, res) =>{
 app.delete('/tasks/:taskid', async (req, res)=>{
   const {taskid} = req.params
 
-  const task =  await Task.findOneAndDelete(taskid).then(result => result).catch(err=>console.log(err))
+  console.log(taskid)
 
-  res.send(task)
+  console.log(await Task.findById(taskid))
+
+  // const task = await Task.findById(taskid)
+
+  // task.
+
+  await Task.deleteOne({_id:taskid}).then(result => res.send(result)).catch(err=>console.log(err))
+
+  
 
 })
 

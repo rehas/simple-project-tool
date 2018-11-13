@@ -17,3 +17,35 @@ export const getAllTasks = () => (dispatch) =>{
     })
     .catch(err=> console.log(err))
 }
+
+export const editTaskById = (id, data) => (dispatch) =>{
+  request
+    .patch(`${baseUrl}/tasks/${id}`)
+    .send(data)
+    .then(response=>{
+      console.log(response.body)
+      dispatch(getAllTasks())
+    })
+    .catch(err=> console.log(err))
+}
+
+export const deleteTaskWithId = (id) =>(dispatch) =>{
+  request
+    .delete(`${baseUrl}/tasks/${id}`)
+    .then(response=> {
+      console.log(response)
+      dispatch(getAllTasks())
+    })
+    .catch(err=> console.log(err))
+}
+
+export const addTask = (taskBody) => (dispatch) =>{
+  request
+    .post(`${baseUrl}/tasks`)
+    .send(taskBody)
+    .then(response=> {
+      console.log(response)
+      dispatch(getAllTasks())
+    })
+    .catch(err=> console.log(err))
+}

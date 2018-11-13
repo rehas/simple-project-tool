@@ -1,9 +1,8 @@
-import React, {PureComponent} from 'react'
-import Phase from './Phase';
-import {Row, Col} from 'react-flexbox-grid'
+import React from 'react'
+import Board from 'react-trello'
 import {withStyles} from '@material-ui/core'
 import {connect} from 'react-redux'
-import {getAllTasks} from '../actions/tasks'
+import {getAllTasks, editTaskById, addTask, deleteTaskWithId} from '../actions/tasks'
 
 const styles = theme =>({
   root : {
@@ -26,26 +25,79 @@ const sections = [
   {name: "Launch"},
 ]
 
-class MainPage extends PureComponent{
+const dataSet = (sectionsObj, tasks = []) =>{
+  return {
+    lanes: sectionsObj.map(section=>{
+      return {
+        id: section.name, 
+        title: section.name,
+        cards: tasks.filter(task=> task.section.toLowerCase() === section.name.toLowerCase()).map(task=> ({...task, id: task._id}))
+      }
+    })
+  }
+}
+
+// console.log((dataSet(sections)))
+
+let data = dataSet(sections)
+
+class MainPage extends React.Component {
 
   componentDidMount = () => {
     this.props.getAllTasks()
   }
+  handleDragStart = (cardId, laneId) =>{
+    console.log('drag started')
+        console.log(`cardId: ${cardId}`)
+        console.log(`laneId: ${laneId}`)
+  }
 
-  render(){
-    const {classes, taskList }= this.props
-    return (
-      <Row lg={12} className={classes.root}>
-      {taskList && sections.map(section=>{
-        
-        return (<Col key={section.name} lg={12 / sections.length} className={classes.f}>
-          <Phase sectionName={section.name} data={taskList.filter(task=>{
-            return (task.section.toLowerCase() === section.name.toLowerCase() )
-          })}/>
-        </Col>)
-      })}
-      </Row>
-    )
+  handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, card) => {
+    // console.log('drag ended')
+    // console.log(`cardId: ${cardId}`)
+    // console.log(`sourceLaneId: ${sourceLaneId}`)
+    // console.log(`targetLaneId: ${targetLaneId}`)
+    // console.log(card)
+    this.props.editTaskById(cardId, {
+      ...card,
+      section : targetLaneId
+    })
+  }
+
+  handleCardDelete = (cardId)=>{
+    console.log(cardId)
+    this.props.deleteTaskWithId(cardId)
+  }
+
+  handleCardAdd = (card, laneId) =>{
+    this.props.addTask({
+      ...card, 
+      section: laneId
+    })
+  }
+  
+
+
+  render() {
+
+    const {taskList} = this.props
+
+    if (taskList){
+      data = dataSet(sections, taskList)
+    }
+
+    
+
+    return <Board 
+      draggable data={data}
+      handleDragStart={this.handleDragStart}
+      handleDragEnd={this.handleDragEnd}
+      laneDraggable={false}
+      // editable
+      onCardDelete={this.handleCardDelete}
+      onCardAdd={this.handleCardAdd} 
+      onCardDelete={this.handleCardDelete}
+      />
   }
 }
 
@@ -56,7 +108,6 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  getAllTasks
+  getAllTasks, editTaskById, addTask, deleteTaskWithId
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)( withStyles(styles)(MainPage))
