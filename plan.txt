@@ -1,0 +1,16 @@
+Server : 
+  + Setup model for task
+    + title,
+    + description,
+    + section,
+  + Setup api endpoints,
+    + get all tasks
+    + create new task
+    + get task by id
+    + edit task by id
+    + delete task by id
+  
+Client : 
+  - Setup layout with grids
+  - Setup task component
+  - Render taks on 
