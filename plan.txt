@@ -11,15 +11,15 @@ Server :
     + delete task by id
   
 Client : 
-  - Setup layout with grids
+  + Setup layout with grids
     + Setup Up 7 columns
-      - Unset
-      - FlowCharts
-      - WireFrames
-      - Prototype
-      - Development
-      - Test
-      - Launch
+      + Unset
+      + FlowCharts
+      + WireFrames
+      + Prototype
+      + Development
+      + Test
+      + Launch
   + Setup task component
   + Render taks on 
   + make tasks draggable
@@ -27,7 +27,7 @@ Client :
   + make tasks deletable
   + create new tasks
 
-HERE=> clean code
++ clean code
 
-- Own input
++ Own input
   + Add sections

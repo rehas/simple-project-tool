@@ -7,7 +7,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <p className="App-intro"></p>
           <Route exact path='/' component={MainPage}/>
       </div>
     );
