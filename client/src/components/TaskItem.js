@@ -1,17 +1,20 @@
 import React, {PureComponent} from 'react'
 
 class TaskItem extends PureComponent{
-  onDragStart = (e, data) =>{
-    console.log(e)
-    console.log(data)
-  }
+  // onDragStart = (e, data) =>{
+  //   console.log(e)
+  //   console.log(data)
+  //   e.dataTransfer.setData("text/plain",data)
+  // }
   render(){
-    const data = "I'm data"
+    const {data, sName} = this.props
+    // console.log(data, sName)
     return (
       <div 
-      onDragStart = {(e) =>this.onDragStart(e, data)}
+      onDragStart = {(e) =>this.props.taskdragHandler(e, data.title)}
       draggable
-      >task</div>
+      >{this.props.data.title}
+        </div>
     )
   }
 }

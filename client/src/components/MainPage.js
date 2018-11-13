@@ -2,6 +2,8 @@ import React, {PureComponent} from 'react'
 import Phase from './Phase';
 import {Row, Col} from 'react-flexbox-grid'
 import {withStyles} from '@material-ui/core'
+import {connect} from 'react-redux'
+import {getAllTasks} from '../actions/tasks'
 
 const styles = theme =>({
   root : {
@@ -9,24 +11,52 @@ const styles = theme =>({
     height: '100vh'
   },
   f:{
-    backgroundColor : theme.palette.secondary.light
+    backgroundColor : theme.palette.secondary.light,
+    border: '1px solid black'
   }
 })
 
+const sections = [
+  {name: "unset"},
+  {name: "FlowCharts"},
+  {name: "WireFrames"},
+  {name: "Prototype"},
+  {name: "Development"},
+  {name: "Test"},
+  {name: "Launch"},
+]
+
 class MainPage extends PureComponent{
+
+  componentDidMount = () => {
+    this.props.getAllTasks()
+  }
+
   render(){
-    const {classes }= this.props
+    const {classes, taskList }= this.props
     return (
       <Row lg={12} className={classes.root}>
-      <Col lg={6} className={classes.f}>
-        <Phase sectionName={'test'}/>
-      </Col>
-      <Col lg={6}>
-        <Phase sectionName={'development'}/>
-      </Col>
+      {taskList && sections.map(section=>{
+        
+        return (<Col key={section.name} lg={12 / sections.length} className={classes.f}>
+          <Phase sectionName={section.name} data={taskList.filter(task=>{
+            return (task.section.toLowerCase() === section.name.toLowerCase() )
+          })}/>
+        </Col>)
+      })}
       </Row>
     )
   }
 }
 
-export default withStyles(styles)(MainPage)
+const mapStateToProps = (state) => {
+  return {
+    taskList : state.tasks
+  }
+}
+
+const mapDispatchToProps = {
+  getAllTasks
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)( withStyles(styles)(MainPage))
