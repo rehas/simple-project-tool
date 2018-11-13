@@ -10,7 +10,3 @@ const task = mongoose.model('task', {
 var exports = module.exports
 
 exports.task = task
-
-// const kitty = new Cat({ name: 'Zildjian' });
-// kitty.save().then(() => console.log('meow'));
-

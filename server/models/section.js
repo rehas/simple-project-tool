@@ -8,7 +8,3 @@ const section = mongoose.model('section', {
 var exports = module.exports
 
 exports.section = section
-
-// const kitty = new Cat({ name: 'Zildjian' });
-// kitty.save().then(() => console.log('meow'));
-

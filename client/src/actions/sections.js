@@ -23,7 +23,6 @@ export const addNewSection = (data) => (dispatch) =>{
     .post(`${baseUrl}/sections`)
     .send(data)
     .then(response=>{
-      console.log(response)
       dispatch(getAllSections())
     })
     .catch(err=> console.log(err))
