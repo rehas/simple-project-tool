@@ -9,9 +9,11 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 const {task} = require('./models/task.js')
+const {section} = require('./models/section.js')
 
 const Cat = mongoose.model('Cat', { name: String });
 const Task = task
+const Section = section
 // const kitty = new Cat({ name: 'Zildjian' });
 // kitty.save().then(() => console.log('meow'));
 // const task1 = new Task({title : 'test1', description : 'test description', section: 'section 1'})
@@ -80,6 +82,38 @@ app.delete('/tasks/:taskid', async (req, res)=>{
   await Task.deleteOne({_id:taskid}).then(result => res.send(result)).catch(err=>console.log(err))
 
   
+
+})
+
+app.get('/sections', async(req, res)=>{
+  Section.find()
+    .then(result=>{
+      console.log(result)
+      res.send(result)
+    })
+    .catch(err=> console.log(err))
+})
+
+app.post('/sections', async(req,res)=>{
+  const {name} = req.body
+
+  Section.findOne({name: name})
+  .then(result=> {
+    if (result){
+      res.send("Name exists")
+      return
+    }else{
+      if(name) {
+        const section = new Section()
+        section.name = name
+        section.save().then(result=> res.send(result)).catch(err=> console.log(err))
+      }
+      else{
+        res.send("Empty Name")
+      }
+    }
+  })
+  .catch(err=> console.log(err))
 
 })
 

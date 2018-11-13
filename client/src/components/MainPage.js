@@ -1,8 +1,9 @@
-import React from 'react'
+import React, {Component} from 'react'
 import Board from 'react-trello'
 import {withStyles} from '@material-ui/core'
 import {connect} from 'react-redux'
 import {getAllTasks, editTaskById, addTask, deleteTaskWithId} from '../actions/tasks'
+import {getAllSections, addNewSection} from '../actions/sections'
 
 const styles = theme =>({
   root : {
@@ -15,19 +16,19 @@ const styles = theme =>({
   }
 })
 
-const sections = [
-  {name: "unset"},
-  {name: "FlowCharts"},
-  {name: "WireFrames"},
-  {name: "Prototype"},
-  {name: "Development"},
-  {name: "Test"},
-  {name: "Launch"},
-]
+// const sectionsInitial = [
+//   {name: "unset"},
+//   {name: "FlowCharts"},
+//   {name: "WireFrames"},
+//   {name: "Prototype"},
+//   {name: "Development"},
+//   {name: "Test"},
+//   {name: "Launch"},
+// ]
 
-const dataSet = (sectionsObj, tasks = []) =>{
+const dataSet = (sectionsObj=[], tasks = []) =>{
   return {
-    lanes: sectionsObj.map(section=>{
+    lanes: sectionsObj.sort((x, y)=> -1).map(section=>{
       return {
         id: section.name, 
         title: section.name,
@@ -39,12 +40,54 @@ const dataSet = (sectionsObj, tasks = []) =>{
 
 // console.log((dataSet(sections)))
 
-let data = dataSet(sections)
+// let data = dataSet(sectionsInitial)
+
+
+class NewCard extends Component {
+  updateField = (field, evt) => {
+    this.setState({[field]: evt.target.value})
+  }
+
+  handleAdd = () => {
+    this.props.onAdd(this.state)
+  }
+
+  render() {
+    const {onCancel} = this.props
+    return (
+      <div style={{background: 'white', borderRadius: 3, border: '1px solid #eee', borderBottom: '1px solid #ccc'}}>
+        <div style={{padding: 5, margin: 5}}>
+          <div>
+            <div style={{marginBottom: 5}}>
+              <input type="text" onChange={evt => this.updateField('title', evt)} placeholder="Title" />
+            </div>
+            <div style={{marginBottom: 5}}>
+              <input type="text" onChange={evt => this.updateField('description', evt)} placeholder="Description" />
+            </div>
+          </div>
+          <button onClick={this.handleAdd}>Add</button>
+          <button onClick={onCancel}>Cancel</button>
+        </div>
+      </div>
+    )
+  }
+}
+
 
 class MainPage extends React.Component {
 
+  // state = {
+  //   laneSize : this.props.sections ? this.props.sections.length : sectionsInitial.length
+  // }
+
   componentDidMount = () => {
+    // this.props.getAllSections()
     this.props.getAllTasks()
+    this.props.getAllSections()
+    console.log(this.props.sections && this.props.sections.length)
+    // this.setState({
+    //   laneSize: this.props.sections ? this.props.sections.length : sectionsInitial.length
+    // })
   }
   handleDragStart = (cardId, laneId) =>{
     console.log('drag started')
@@ -75,17 +118,32 @@ class MainPage extends React.Component {
       section: laneId
     })
   }
+
+  handleAdd = (a,b,c) =>{
+    console.log("lane added?")
+    console.log(a)
+    console.log(a.lanes[a.lanes.length-1])
+    const laneAdded = a.lanes[a.lanes.length-1]
+
+    if(this.props.sections && this.props.sections.filter(section=> section&& section.name.includes(laneAdded.title)).length===0 ){
+      this.props.addNewSection({name:laneAdded.title})
+    }
+
+
+  }
   
 
 
   render() {
 
-    const {taskList} = this.props
+    const {taskList, sections} = this.props
+    let data = dataSet()
+    console.log(taskList)
+    console.log(sections)
 
-    if (taskList){
+    if (taskList && sections){
       data = dataSet(sections, taskList)
     }
-
     
 
     return <Board 
@@ -93,21 +151,25 @@ class MainPage extends React.Component {
       handleDragStart={this.handleDragStart}
       handleDragEnd={this.handleDragEnd}
       laneDraggable={false}
-      // editable
+      laneEditable={false}
+      laneSortFunction={(card1, card2) => new Date(card2.date) - new Date(card1.date)}
       onCardDelete={this.handleCardDelete}
       onCardAdd={this.handleCardAdd} 
       onCardDelete={this.handleCardDelete}
+      editable
+      onDataChange={this.handleAdd}
       />
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    taskList : state.tasks
+    taskList : state.tasks,
+    sections : state.sections
   }
 }
 
 const mapDispatchToProps = {
-  getAllTasks, editTaskById, addTask, deleteTaskWithId
+  getAllTasks, editTaskById, addTask, deleteTaskWithId, getAllSections,addNewSection
 }
 export default connect(mapStateToProps, mapDispatchToProps)( withStyles(styles)(MainPage))
