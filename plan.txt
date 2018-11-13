@@ -27,8 +27,7 @@ Client :
   + make tasks deletable
   + create new tasks
 
-- clean code
+HERE=> clean code
 
 - Own input
-  - color cards when dropped to a different lane
-  - 
+  + Add sections
